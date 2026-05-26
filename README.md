@@ -219,7 +219,7 @@ from early_stopping import EarlyStopping
 early_stopping = EarlyStopping(patience=<p>, verbose=True, path=<checkpoint_dir>, CV_idx=<fold>)
 ```
 
-The reported test accuracy for each fold is the test accuracy at the epoch with the **lowest validation loss** (i.e., `early_stopping.best_acc`), not the final epoch. This is consistent with the description in the manuscript. We set patience=20 in all of our experiments.
+The reported test accuracy for each fold is the test accuracy at the epoch with the **lowest validation loss** (i.e., `early_stopping.best_acc`), not the final epoch. This is consistent with the description in the manuscript. We set patience=20/10 for ModelNet/Protein experiments
 
 ---
 
