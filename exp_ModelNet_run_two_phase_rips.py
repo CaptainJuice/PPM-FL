@@ -217,7 +217,7 @@ if __name__ == "__main__":
         test_task_acc_list = [[0]*epoch_num for _ in range(CV_num)]
     
     for CV_idx in range(CV_num):
-        early_stopping = EarlyStopping(save_path=savedirname, patience=30, verbose=True,delta=0.001)
+        early_stopping = EarlyStopping(save_path=savedirname, patience=20, verbose=True,delta=0.001)
         print(f"=== Cross Validation: {CV_idx + 1} / {CV_num} ===")
         all_y = all_y.to(device)
 
