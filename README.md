@@ -77,20 +77,99 @@ pip install gudhi scikit-learn numpy matplotlib
 
 ## Data Preparation
 
-### ModelNet (Point Cloud Classification)
+### ModelNet-10 (Point Cloud Classification)
 
-The dataset `ModelNetNoisy01_C=10,N=100,T=1,K=2000` contains 10-class ModelNet point clouds with Gaussian noise. Place pre-processed data under `data/`:
+The dataset `ModelNetNoisy01_C=10,N=100,T=1,K=2000` contains 10-class ModelNet point clouds with Gaussian noise. Pre-processed tensors are stored under `FiltrationLearningForPointClouds/data/`:
 
 ```
-data/ModelNetNoisy01_C=10,N=100,T=1,K=2000_data   # shape: (N_total, K, K) distance matrices
-data/ModelNetNoisy01_C=10,N=100,T=1,K=2000_label  # shape: (N_total,) class labels
+FiltrationLearningForPointClouds/data/ModelNetNoisy01_C=10,N=100,T=1,K=2000_data   # shape: (1000, 2000, 3) point clouds
+FiltrationLearningForPointClouds/data/ModelNetNoisy01_C=10,N=100,T=1,K=2000_label  # shape: (1000,) class labels
+```
+
+These files are already provided. If you need to regenerate them from raw ModelNet10 meshes:
+
+```bash
+# Download ModelNet10 from Princeton ModelNet page and extract to:
+#   FiltrationLearningForPointClouds/data_create/data/ModelNet10/
+cd FiltrationLearningForPointClouds/data_create
+python3 create_modelnet_pointcloud_data.py
+```
+
+Processing details:
+- 100 point clouds per class (10 classes), each sampled with 2000 points from mesh faces
+- Coordinates normalized per-cloud: `(x - mean) / std`
+- Gaussian noise added: σ = 0.1
+- Output stored as PyTorch float32 tensors
+
+### ModelNet-40 (Point Cloud Classification)
+
+The dataset `ModelNetNoisy01_C=40,N=100,T=1,K=2000` is the 40-class variant. Pre-processed tensors:
+
+```
+FiltrationLearningForPointClouds/data/ModelNetNoisy01_C=40,N=100,T=1,K=2000_data
+FiltrationLearningForPointClouds/data/ModelNetNoisy01_C=40,N=100,T=1,K=2000_label
+```
+
+To regenerate from raw ModelNet40 meshes:
+
+```bash
+# 1. Download ModelNet40 from Princeton ModelNet page:
+#    https://modelnet.cs.princeton.edu/
+#    Extract so that the directory structure is:
+#    ~/PPM_Expected_FL_2/ModelNet40/<classname>/train/*.off
+
+# 2. Run the creation script:
+cd FiltrationLearningForPointClouds/data_create
+python3 create_modelnet40_pointcloud_data.py
+```
+
+Processing details (from `data_create/create_modelnet40_pointcloud_data.py`):
+- 40 classes, 100 point clouds per class selected from training splits
+- 2000 points sampled per cloud via area-weighted mesh face sampling
+- Coordinates normalized per-cloud: `(x - mean) / max(std, 1e-8)`
+- Gaussian noise added: σ = 0.1
+- Random seed fixed to 0 for reproducibility of point sampling
+- Output stored as PyTorch float32 tensors
+
+To run the ModelNet-40 two-phase experiment:
+
+```bash
+bash exe_ModelNet40_two_phase_np.sh
+```
+
+Key settings in `exe_ModelNet40_two_phase_np.sh`:
+
+| Parameter   | Value | Meaning |
+|-------------|-------|---------|
+| `dataset`   | `ModelNetNoisy01_C=40,N=100,T=1,K=2000` | 40-class dataset |
+| `dim`       | `-1`  | Use both H₀ and H₁ |
+| `nb_repeat` | `200` | Expectation approximation repeats |
+| `num_points`| `1024`| Points subsampled per cloud |
+| `seed`      | `2026`| Data-split seed |
+| `ppm_seed`  | `42`  | PPM subsampling seed |
+| `deepsets`  | `1`   | Use DeepSets backbone |
+
+To evaluate the pre-trained DeepSets backbone on ModelNet-40:
+
+```bash
+bash exe_eval_ModelNet40_deepsets_np.sh
+# Results saved to result/ModelNet40_deepsets_pretrained_eval_np1024_seed2026/eval.log
 ```
 
 ### Protein Classification
 
+Pre-processed tensors are already provided:
+
 ```
-data/KNproteinNoisy01_C=7,T=500,K=60_data
-data/KNproteinNoisy01_C=7,T=500,K=60_label
+FiltrationLearningForPointClouds/data/KNproteinNoisy01_C=7,T=500,K=60_data
+FiltrationLearningForPointClouds/data/KNproteinNoisy01_C=7,T=500,K=60_label
+```
+
+To regenerate from the raw cross-correlation matrices:
+
+```bash
+cd FiltrationLearningForPointClouds/data_create
+python3 create_KN_protein_sampled_data.py
 ```
 
 
