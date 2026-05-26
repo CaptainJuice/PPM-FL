@@ -99,7 +99,7 @@ if __name__ == "__main__":
     random.shuffle(data_idx)
     
     for CV_idx in range(CV_num):
-        early_stopping = EarlyStopping(save_path=savedirname, patience=30, verbose=True,delta=0.001)
+        early_stopping = EarlyStopping(save_path=savedirname, patience=20, verbose=True,delta=0.001)
         print(f"=== Cross Validation: {CV_idx + 1} / {CV_num} ===")
 
         train_idx = [data_idx[i] for i in range(data_num) if i % CV_num != CV_idx]
