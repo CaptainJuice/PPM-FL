@@ -24,7 +24,6 @@ PPM_Expected_FL_2/
 ├── exp_ModelNet_run_two_phase_np.py  # ModelNet two-phase with configurable num_points
 ├── exp_ModelNet_run.py            # ModelNet single-phase experiment
 ├── exp_protein_run.py             # Protein classification experiment
-
 │
 ├── exe_ModelNet_two_phase.sh      # → Table: ModelNet classification (two-phase)
 ├── exe_ModelNet_two_phase_scale.sh   # → Table: Scalability experiment
@@ -34,7 +33,6 @@ PPM_Expected_FL_2/
 ├── exe_protein_all.sh                # → Table: Protein classification
 ├── exe_protein_d0_rips.sh            # → Table: Protein Rips baseline
 ├── exe_scale_*.sh                    # → Figure: Scalability by dataset size
-├── exe_UCR.sh                        # → Table: UCR time-series classification
 │
 ├── data/                          # Dataset directory (see Data Preparation)
 ├── premodel/                      # Pre-trained backbone models (deepsets/pointnet/pointmlp)
@@ -177,7 +175,6 @@ python3 create_KN_protein_sampled_data.py
 
 ## Reproducing Reported Results
 
-All scripts write results to `result/<experiment_name>/train.log` and save model checkpoints. Run from the repository root.
 
 ### ModelNet Two-Phase Experiments (main table)
 
